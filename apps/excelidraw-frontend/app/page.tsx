@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
 import { Pencil, Share2, Users2, Sparkles, Github, Download } from "lucide-react";
@@ -20,13 +22,12 @@ function App() {
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link href={"/signin"}>
-                <Button variant={"primary"} size="lg" className="h-12 px-6">
+                <Button variant={"outline"} size="lg" className="h-12 px-6 rounded-md ">
                   Sign in
-                  <Pencil className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/signup">
-                <Button variant="outline" size="lg" className="h-12 px-6">
+                <Button variant="primary" size="lg" className="h-12 px-6 rounded-md">
                   Sign up
                 </Button>
               </Link>
@@ -90,8 +91,8 @@ function App() {
                 Join thousands of users who are already creating amazing diagrams and sketches.
               </p>
               <div className="mt-10 flex items-center justify-center gap-x-6">
-                <Button size="lg" variant="secondary" className="h-12 px-6">
-                  Open Canvas
+                <Button  variant="outline" size="lg" onClick={() => window.location.href = `http://localhost:3001`} className="h-12 px-6 flex items-center bg-transparent text-primary-foreground border-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                  <span>Open Canvas</span>
                   <Pencil className="ml-2 h-4 w-4" />
                 </Button>
                 <Button variant="outline" size="lg" className="h-12 px-6 bg-transparent text-primary-foreground border-primary-foreground hover:bg-primary-foreground hover:text-primary">

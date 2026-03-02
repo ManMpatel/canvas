@@ -9,12 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@excalidraw/excalidraw": "^0.18.0",
     "@repo/ui": "workspace:*",
     "axios": "^1.7.9",
     "lucide-react": "^0.473.0",
     "next": "15.1.5",
     "react": "^19.0.0",
+    "react-canvas-draw": "^1.2.1",
     "react-dom": "^19.0.0",
+    "react-sketch-canvas": "^6.2.0",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {

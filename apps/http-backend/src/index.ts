@@ -72,7 +72,7 @@ app.post("/signin", async (req, res) => {
     })
 })
 
-app.post("/room", middleware, async (req, res) => {
+app.post("/room", middleware, async (req, res): Promise<void> => {
     const parsedData = CreateRoomSchema.safeParse(req.body);
     if (!parsedData.success) {
         res.json({
@@ -81,7 +81,7 @@ app.post("/room", middleware, async (req, res) => {
         return;
     }
     // @ts-ignore: TODO: Fix this
-    const userId = req.userId;
+    const userId = req.userId as string;
 
     try {
         const room = await prismaClient.room.create({
@@ -98,8 +98,57 @@ app.post("/room", middleware, async (req, res) => {
         res.status(411).json({
             message: "Room already exists with this name"
         })
+         return;
     }
 })
+
+
+
+
+app.get("/rooms", async (req, res) => {
+  try {
+    const rooms = await prismaClient.room.findMany({
+      orderBy: {
+        id: "desc"
+      }
+    });
+
+    res.json({ rooms });
+  } catch (e) {
+    res.status(500).json({ rooms: [] });
+  }
+});
+
+app.post("/chat", middleware, async (req, res): Promise<void> => {
+  const { roomId, message } = req.body;
+
+  if (!roomId || !message) {
+    res.status(400).json({ message: "Missing fields" });
+    return;
+  }
+
+  try {
+    const chat = await prismaClient.chat.create({
+      data: {
+        roomId: Number(roomId),
+        message: message,
+        // @ts-ignore:
+        userId: req.userId as string
+      }
+    });
+
+    res.json({
+      chatId: chat.id
+    });
+    return;
+
+  } catch (e) {
+    res.status(500).json({ message: "Error creating chat" });
+    return;
+  }
+});
+
+
 
 app.get("/chats/:roomId", async (req, res) => {
     try {
@@ -129,15 +178,21 @@ app.get("/chats/:roomId", async (req, res) => {
 
 app.get("/room/:slug", async (req, res) => {
     const slug = req.params.slug;
-    const room = await prismaClient.room.findFirst({
-        where: {
-            slug
-        }
+    const adminId = req.query.adminId;
+    let room = await prismaClient.room.findFirst({
+        where: { slug }
     });
 
-    res.json({
-        room
-    })
-})
+    if (!room) {
+        room = await prismaClient.room.create({
+            data: {
+                slug,
+                adminId: adminId as string
+            }
+        });
+    }
 
-app.listen(3001);
+    res.json({ room });
+});
+
+app.listen(3008);

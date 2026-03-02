@@ -10,7 +10,7 @@ export function ChatRoomClient({
 }: {
     messages: {message: string}[];
     id: string
-}) {
+}): JSX.Element {
     const [chats, setChats] = useState(messages);
     const [currentMessage, setCurrentMessage] = useState("");
     const {socket, loading} = useSocket();
@@ -30,9 +30,9 @@ export function ChatRoomClient({
                 }
             }
         }
-    }, [socket, loading, id])
-
-    return <div>
+    }, [socket, loading, id]);
+    return (
+      <div>
         {chats.map(m => <div>{m.message}</div>)}
 
         <input type="text" value={currentMessage} onChange={e => {
@@ -48,4 +48,4 @@ export function ChatRoomClient({
             setCurrentMessage("");
         }}>Send message</button>
     </div>
-}
+)}

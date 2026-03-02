@@ -1,32 +1,121 @@
+// "use client";
+
+// import { useState } from "react";
+// import styles from "./page.module.css";
+// import { useRouter } from "next/navigation";
+
+// export default function Home():JSX.Element {
+//   const [roomId, setRoomId] = useState("");
+//   const router = useRouter();
+
+//   return (
+//     <div style={{
+//       display: "flex",
+//       justifyContent: "center",
+//       alignItems: "center",
+//       height: "100vh",
+//       width: "100vw"
+//     }}>
+//       <div>
+//         <input style={{
+//           padding: 10
+//         }} value={roomId} onChange={(e) => {
+//           setRoomId(e.target.value);
+//         }} type="text" placeholder="Room id"></input>
+
+//         <button style={{padding: 10}} onClick={() => {
+//           window.location.href = `http://localhost:3000/canvas/${roomId}`;
+//         }}>Join room</button>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
 "use client";
 
-import { useState } from "react";
-import styles from "./page.module.css";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
-export default function Home() {
-  const [roomId, setRoomId] = useState("");
+export default function Home(): JSX.Element {
+  const [roomName, setRoomName] = useState("");
+  const [rooms, setRooms] = useState<any[]>([]);
   const router = useRouter();
 
-  return (
-    <div style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "100vh",
-      width: "100vw"
-    }}>
-      <div>
-        <input style={{
-          padding: 10
-        }} value={roomId} onChange={(e) => {
-          setRoomId(e.target.value);
-        }} type="text" placeholder="Room id"></input>
+  // Fetch all rooms on load
+  useEffect(() => {
+    async function fetchRooms() {
+      try {
+        const res = await axios.get("http://localhost:3008/rooms");
+        setRooms(res.data.rooms);
+      } catch (err) {
+        console.log("Error fetching rooms");
+      }
+    }
 
-        <button style={{padding: 10}} onClick={() => {
-          router.push(`/room/${roomId}`);
-        }}>Join room</button>
-      </div>
+    fetchRooms();
+  }, []);
+
+  async function createRoom() {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.post(
+        "http://localhost:3008/room",
+        { name: roomName },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      router.push(`/canvas/${res.data.roomId}`);
+    } catch (err) {
+      alert("Error creating room");
+    }
+  }
+
+  function joinRoom(id: number) {
+    router.push(`/canvas/${id}`);
+  }
+
+  return (
+    <div style={{ padding: 40 }}>
+      <h1>Create Room</h1>
+
+      <input
+        value={roomName}
+        onChange={(e) => setRoomName(e.target.value)}
+        placeholder="Room name"
+        style={{ padding: 10 }}
+      />
+
+      <button
+        onClick={createRoom}
+        style={{ padding: 10, marginLeft: 10 }}
+      >
+        Create Room
+      </button>
+
+      <hr style={{ margin: "30px 0" }} />
+
+      <h2>Available Rooms</h2>
+
+      {rooms.map((room) => (
+        <div key={room.id} style={{ marginBottom: 10 }}>
+          {room.slug}
+          <button
+            style={{ marginLeft: 10 }}
+            onClick={() => joinRoom(room.id)}
+          >
+            Join
+          </button>
+        </div>
+      ))}
     </div>
   );
 }
+

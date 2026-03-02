@@ -7,9 +7,10 @@ async function getChats(roomId: string) {
     return response.data.messages;
 }
 
+
 export async function ChatRoom({id}: {
     id: string
-}) {
+}): Promise<JSX.Element> {
     const messages = await getChats(id);
     return <ChatRoomClient id={id} messages={messages} />
 }
