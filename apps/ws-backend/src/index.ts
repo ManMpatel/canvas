@@ -4,6 +4,8 @@ import { JWT_SECRET } from '@repo/backend-common/config';
 import { prismaClient } from "@repo/db/client";
 
 const wss = new WebSocketServer({ port: 8080 });
+
+
 console.log("WebSocket server running on port 8080");
 interface User {
   ws: WebSocket,
@@ -40,14 +42,18 @@ function checkUser(token: string): string | null {
 
 
 wss.on('connection', function connection(ws, request) {
+  
   const url = request.url;
   if (!url) {
     return;
   }
+
+  
   const queryParams = new URLSearchParams(url.split('?')[1]);
   const token = queryParams.get('token') || "";
   const userId = checkUser(token);
-
+  console.log("New connection, userId:", userId);
+  
   if (userId == null) {
     ws.close()
     return null;
@@ -97,6 +103,9 @@ wss.on('connection', function connection(ws, request) {
       try {
       console.log("Trying to save:", roomId, userId);
 
+      console.log(roomId, message, userId);
+      console.log(roomId, message, userId);
+      console.log(roomId, message, userId);
       const saved = await prismaClient.chat.create({
         data: {
           roomId: Number(roomId),

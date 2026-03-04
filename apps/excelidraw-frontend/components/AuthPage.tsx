@@ -37,42 +37,34 @@ export function AuthPage({ isSignin }: { isSignin: boolean }) {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit() {
+    async function handleSubmit() {
     try {
-      setLoading(true);
+        setLoading(true);
 
-      const url = isSignin
+        const url = isSignin
         ? "http://localhost:3008/signin"
         : "http://localhost:3008/signup";
 
-      const payload = isSignin
-        ? {
-            username,
-            password,
-          }
-        : {
-            username,
-            password,
-            name,
-          };
+        const payload = isSignin
+        ? { username, password }
+        : { username, password, name };
 
-      const res = await axios.post(url, payload);
+        const res = await axios.post(url, payload);
 
-      if (isSignin) {
+        if (isSignin) {
         localStorage.setItem("token", res.data.token);
-        router.push("/");
-        console.log(res.data);
-      } else {
+        window.location.replace("/canvas/4");
+        } else {
         alert("Signup successful 🎉 Please sign in");
         router.push("/signin");
-      }
+        }
 
     } catch (err) {
-      alert("Authentication failed");
+        alert("Authentication failed");
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  }
+    }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white">

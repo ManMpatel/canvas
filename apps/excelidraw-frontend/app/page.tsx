@@ -5,11 +5,23 @@ import { Card } from "@repo/ui/card";
 import { Pencil, Share2, Users2, Sparkles, Github, Download } from "lucide-react";
 import Link from "next/link";
 
+
 function App() {
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <header className="relative overflow-hidden">
+  return ( <div>
+          <header className="relative overflow-hidden">
+        <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8 flex justify-end">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              localStorage.removeItem("token");
+              window.location.reload(); 
+            }}
+          >
+            Logout
+          </Button> 
+        </div>
+
         <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold tracking-tight sm:text-6xl text-foreground">
@@ -91,7 +103,7 @@ function App() {
                 Join thousands of users who are already creating amazing diagrams and sketches.
               </p>
               <div className="mt-10 flex items-center justify-center gap-x-6">
-                <Button  variant="outline" size="lg" onClick={() => window.location.href = `http://localhost:3001`} className="h-12 px-6 flex items-center bg-transparent text-primary-foreground border-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                <Button  variant="outline" size="lg" onClick={() => window.location.href = `http://localhost:3000`} className="h-12 px-6 flex items-center bg-transparent text-primary-foreground border-primary-foreground hover:bg-primary-foreground hover:text-primary">
                   <span>Open Canvas</span>
                   <Pencil className="ml-2 h-4 w-4" />
                 </Button>
@@ -123,7 +135,7 @@ function App() {
         </div>
       </footer>
     </div>
-  );
+    );
 }
 
 export default App;

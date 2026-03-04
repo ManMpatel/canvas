@@ -163,8 +163,9 @@ app.get("/chats/:roomId", async (req, res) => {
             },
             take: 1000
         });
-
+        console.log(messages);
         res.json({
+            
             messages
         })
     } catch(e) {
@@ -175,6 +176,8 @@ app.get("/chats/:roomId", async (req, res) => {
     }
     
 })
+
+
 
 app.get("/room/:slug", async (req, res) => {
     const slug = req.params.slug;
