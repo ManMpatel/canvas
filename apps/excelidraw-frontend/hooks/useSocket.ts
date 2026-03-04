@@ -44,8 +44,11 @@ export function useSocket() {
         };
 
         return () => {
-            ws.close();
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.close();
+            }
         };
+
     }, []);
 
     return {

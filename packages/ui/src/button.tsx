@@ -1,13 +1,13 @@
 "use client";
 
-import { ReactNode } from "react";
+import React from "react";
 
 interface ButtonProps {
   variant: "primary" | "outline" | "secondary";
   className?: string;
   onClick?: () => void;
   size: "lg" | "sm";
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export const Button = ({ size, variant, className, onClick, children  }: ButtonProps) => {
