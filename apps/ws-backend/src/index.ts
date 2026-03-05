@@ -99,16 +99,30 @@ wss.on('connection', function connection(ws, request) {
     console.log("message received")
     console.log(parsedData);
 
+    if (parsedData.type === "erase") {
+
+      await prismaClient.chat.deleteMany({
+          where: {
+            roomId: Number(parsedData.roomId)
+          }
+      });
+
+      wss.clients.forEach(client => {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify({
+                type: "erase"
+            }));
+          }
+      });
+    }
+
+
     if (parsedData.type === "chat") {
       const roomId = String(parsedData.roomId);
       const message = parsedData.message;
 
       try {
       console.log("Trying to save:", roomId, userId);
-
-      console.log(roomId, message, userId);
-      console.log(roomId, message, userId);
-      console.log(roomId, message, userId);
       const saved = await prismaClient.chat.create({
         data: {
           roomId: Number(roomId),
@@ -117,11 +131,13 @@ wss.on('connection', function connection(ws, request) {
         }
       });
 
-        console.log("✅ Saved:", saved);
+        console.log("Saved:", saved);
       } catch (err) {
-        console.error("❌ DB ERROR:", err);
+        console.error("DB ERROR:", err);
       }
 
+     
+      
       users.forEach(user => {
         if (user.rooms.includes(String(roomId))) {
           user.ws.send(JSON.stringify({

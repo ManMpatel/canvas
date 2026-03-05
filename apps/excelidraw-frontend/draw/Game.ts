@@ -64,6 +64,7 @@ export class Game {
         this.clearCanvas();
     }
 
+
     initHandlers() {
         this.socket.onmessage = (event) => {
             const message = JSON.parse(event.data);
@@ -72,6 +73,10 @@ export class Game {
                 const parsedShape = JSON.parse(message.message)
                 this.existingShapes.push(parsedShape.shape)
                 this.clearCanvas();
+            }
+            if (message.type === "erase") {
+            this.existingShapes = [];
+            this.clearCanvas();
             }
         }
     }
@@ -144,15 +149,15 @@ export class Game {
         }
 
 
-        this.existingShapes.push(shape);
-
+        if (this.socket.readyState === WebSocket.OPEN) {
         this.socket.send(JSON.stringify({
             type: "chat",
             message: JSON.stringify({
-                shape
+            shape
             }),
             roomId: this.roomId
-        }))
+        }));
+        }
     }
     mouseMoveHandler = (e: MouseEvent) => {
         if (this.clicked) {
@@ -234,6 +239,15 @@ export class Game {
             });
 
             this.clearCanvas();
+            if (this.socket.readyState === WebSocket.OPEN) {
+            this.socket.send(JSON.stringify({
+                type: "erase",
+                message: JSON.stringify({
+                shapes: this.existingShapes
+                }),
+                roomId: this.roomId
+            }));
+            }
             return;
         }
             
@@ -272,22 +286,32 @@ export class Game {
                 this.ctx.closePath();
             } else if(this.selectedTool === "pencil" && this.clicked) {
                 
-                this.existingShapes.push ({
+                const shape: Shape = {
                 type: "pencil",
                 startX: this.startX,
                 startY: this.startY,
-                endX :e.clientX,
-                endY: e.clientY,
-                })
+                endX: e.offsetX,
+                endY: e.offsetY
+                };
+
+                this.existingShapes.push(shape);
+
+                if (this.socket.readyState === WebSocket.OPEN) {
+                this.socket.send(JSON.stringify({
+                type: "chat",
+                message: JSON.stringify({ shape }),
+                roomId: this.roomId
+                }));
+                }
             
                 this.ctx.beginPath();
                 this.ctx.moveTo(this.startX, this.startY);
-                this.ctx.lineTo(e.clientX, e.clientY);
+                this.ctx.lineTo(e.offsetX, e.offsetY);
                 this.ctx.stroke();
                 this.ctx.closePath();
 
-                this.startX = e.clientX;
-                this.startY = e.clientY;
+                this.startX = e.offsetX;
+                this.startY = e.offsetY;
             }
             
         }
