@@ -1,10 +1,12 @@
 import express from "express";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from '@repo/backend-common/config';
+// import { JWT_SECRET } from '@repo/backend-common/config';
 import { middleware } from "./middleware";
 import { CreateUserSchema, SigninSchema, CreateRoomSchema } from "@repo/common/types";
 import { prismaClient } from "@repo/db/client";
 import cors from "cors";
+// import { JWT_SECRET } from "@repo/backend-common/config";
+const JWT_SECRET = "12321";
 
 const app = express();
 app.use(express.json());

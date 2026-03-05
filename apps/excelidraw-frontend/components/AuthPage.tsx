@@ -52,8 +52,9 @@ export function AuthPage({ isSignin }: { isSignin: boolean }) {
         const res = await axios.post(url, payload);
 
         if (isSignin) {
+        console.log("Received token:", res.data.token);
         localStorage.setItem("token", res.data.token);
-        window.location.replace("/canvas/4");
+        window.location.replace("/lobby");
         } else {
         alert("Signup successful 🎉 Please sign in");
         router.push("/signin");

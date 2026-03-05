@@ -1,7 +1,8 @@
 import { WebSocket, WebSocketServer } from 'ws';
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { JWT_SECRET } from '@repo/backend-common';
+// import { JWT_SECRET } from '@repo/backend-common';
 import { prismaClient } from "@repo/db/client";
+const JWT_SECRET = "12321";
 
 const wss = new WebSocketServer({ port: 8080 });
 
@@ -15,13 +16,14 @@ interface User {
 
 const users: User[] = [];
 
-function checkUser(token: string): string | null {
+function checkUser({ token }: { token: string; }): string | null {
   try {
 
     const decoded = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload;
     console.log("Decoded token:", decoded);
 
     if (!decoded.userId) {
+      console.log(decoded.userId);
       return null;
     }
 
@@ -51,8 +53,8 @@ wss.on('connection', function connection(ws, request) {
   
   const queryParams = new URLSearchParams(url.split('?')[1]);
   const token = queryParams.get('token') || "";
-  const userId = checkUser(token);
   console.log("New connection, userId:", token);
+  const userId = checkUser({ token });
   console.log("New connection, userId:", userId);
   
   if (userId == null) {
