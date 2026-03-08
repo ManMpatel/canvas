@@ -42,8 +42,8 @@ export function AuthPage({ isSignin }: { isSignin: boolean }) {
         setLoading(true);
 
         const url = isSignin
-        ? "http://localhost:3008/signin"
-        : "http://localhost:3008/signup";
+        ? `${process.env.Next_PUBLIC_API_URL}/signin`
+        : `${process.env.Next_PUBLIC_API_URL}/signup`;
 
         const payload = isSignin
         ? { username, password }
@@ -137,3 +137,4 @@ export function AuthPage({ isSignin }: { isSignin: boolean }) {
     </div>
   );
 }
+

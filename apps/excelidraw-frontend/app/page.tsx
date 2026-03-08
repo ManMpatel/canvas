@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@repo/ui/button";
 import { Card } from "@repo/ui/card";
 import { Pencil, Share2, Users2, Sparkles, Github, Download } from "lucide-react";
@@ -103,10 +101,12 @@ function App() {
                 Join thousands of users who are already creating amazing diagrams and sketches.
               </p>
               <div className="mt-10 flex items-center justify-center gap-x-6">
-                <Button  variant="outline" size="lg" onClick={() => window.location.href = `http://localhost:3000`} className="h-12 px-6 flex items-center bg-transparent text-primary-foreground border-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                <link href={"/signin"}>
+                <Button  variant="outline" size="lg" className="h-12 px-6 flex items-center bg-transparent text-primary-foreground border-primary-foreground hover:bg-primary-foreground hover:text-primary">
                   <span>Open Canvas</span>
                   <Pencil className="ml-2 h-4 w-4" />
                 </Button>
+                </link>
                 <Button variant="outline" size="lg" className="h-12 px-6 bg-transparent text-primary-foreground border-primary-foreground hover:bg-primary-foreground hover:text-primary">
                   View Gallery
                 </Button>

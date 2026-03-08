@@ -48,7 +48,7 @@ export default function Home(): JSX.Element {
   useEffect(() => {
     async function fetchRooms() {
       try {
-        const res = await axios.get("http://localhost:3008/rooms");
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/rooms`);
         console.log("BACKEND RESPONSE:", res.data);
         setRooms(res.data.rooms);
       } catch (err) {
@@ -64,7 +64,7 @@ export default function Home(): JSX.Element {
       const token = localStorage.getItem("token");
 
       const res = await axios.post(
-        "http://localhost:3008/room",
+        `${process.env.NEXT_PUBLIC_API_URL}/rooms`,
         { name: roomName },
         {
           headers: {
